@@ -92,7 +92,7 @@ router.post('/message', requireAuth, async (req, res) => {
 
     return res.json({ reply });
   } catch (err) {
-    console.error('Chat error:', err.message);
+  //  console.error('Chat error:', err.message);
     return res.status(500).json({
       error: 'AI error',
       reply: 'Sorry, I encountered an error. Please try again in a moment.'

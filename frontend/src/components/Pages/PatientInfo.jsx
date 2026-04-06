@@ -96,9 +96,9 @@ export default function PatientInfo() {
             {details.scanType && <Field label="Scan Type" value={details.scanType} />}
             {details.scanImagePath ? (
               <div style={styles.scanContainer}>
-                <img src={details.scanImagePath} alt="Scan" style={styles.scanImg}
+                <img src={(import.meta.env.VITE_API_URL || '') + details.scanImagePath} alt="Scan" style={styles.scanImg}
                   onError={e => e.target.style.display = 'none'} />
-                <a href={details.scanImagePath} target="_blank" rel="noopener noreferrer"
+                <a href={(import.meta.env.VITE_API_URL || '') + details.scanImagePath} target="_blank" rel="noopener noreferrer"
                   style={styles.viewScan}>View full scan →</a>
               </div>
             ) : (
