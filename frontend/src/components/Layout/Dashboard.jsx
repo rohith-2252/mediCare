@@ -9,16 +9,24 @@ import ChatbotPage from '../Chatbot/ChatbotPage.jsx';
 export default function Dashboard() {
   return (
     <div style={styles.root}>
+      {/* Responsive CSS helper */}
+      <style>{`
+        @media (max-width: 768px) {
+          .dashboard-body { flex-direction: column !important; }
+          .dashboard-main { padding: 16px !important; padding-bottom: 80px !important; }
+        }
+      `}</style>
+      
       <Header />
-      <div style={styles.body}>
+      <div style={styles.body} className="dashboard-body">
         <Sidebar />
-        <main style={styles.main}>
+        <main style={styles.main} className="dashboard-main">
           <Routes>
-            <Route path="/"             element={<Navigate to="content" replace />} />
-            <Route path="content"       element={<ContentPage />} />
-            <Route path="patient-info"  element={<PatientInfo />} />
-            <Route path="admin"         element={<AdminPage />} />
-            <Route path="chatbot"       element={<ChatbotPage />} />
+            <Route path="/" element={<Navigate to="content" replace />} />
+            <Route path="content" element={<ContentPage />} />
+            <Route path="patient-info" element={<PatientInfo />} />
+            <Route path="admin" element={<AdminPage />} />
+            <Route path="chatbot" element={<ChatbotPage />} />
           </Routes>
         </main>
       </div>

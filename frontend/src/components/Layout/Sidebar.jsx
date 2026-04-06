@@ -2,129 +2,88 @@ import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth.jsx';
 
 const NAV_ITEMS = [
-  {
-    to: '/dashboard/content',
-    label: 'Content',
-    roles: ['user', 'doctor', 'nurse'],
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <path d="M4 6h16M4 10h16M4 14h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        <rect x="14" y="13" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="2"/>
-      </svg>
-    ),
-  },
-  {
-    to: '/dashboard/patient-info',
-    label: 'Patient Info',
-    roles: ['user', 'doctor', 'nurse'],
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
-      </svg>
-    ),
-  },
-  {
-    to: '/dashboard/admin',
-    label: 'Admin',
-    roles: ['doctor', 'nurse'],
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
-  {
-    to: '/dashboard/chatbot',
-    label: 'AI Chat Bot',
-    roles: ['user', 'doctor', 'nurse'],
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <circle cx="9" cy="10" r="1" fill="currentColor"/>
-        <circle cx="12" cy="10" r="1" fill="currentColor"/>
-        <circle cx="15" cy="10" r="1" fill="currentColor"/>
-      </svg>
-    ),
-  },
+  { to: '/dashboard/content', label: 'Home', icon: '🏠', roles: ['user', 'doctor', 'nurse'] },
+  { to: '/dashboard/patient-info', label: 'Profile', icon: '👤', roles: ['user', 'doctor', 'nurse'] },
+  { to: '/dashboard/admin', label: 'Admin', icon: '⚙️', roles: ['doctor', 'nurse'] },
+  { to: '/dashboard/chatbot', label: 'Chat', icon: '💬', roles: ['user', 'doctor', 'nurse'] },
 ];
 
 export default function Sidebar() {
   const { user } = useAuth();
-
-  const visibleItems = NAV_ITEMS.filter(item =>
-    item.roles.includes(user?.role)
-  );
+  const visibleItems = NAV_ITEMS.filter(item => item.roles.includes(user?.role));
 
   return (
-    <aside style={styles.sidebar}>
-      <nav style={styles.nav}>
-        {visibleItems.map((item, idx) => (
+    <aside style={styles.sidebar} className="sidebar-root">
+      {/* Forcing the bar to the bottom on mobile screens */}
+      <style>{`
+        @media (max-width: 768px) {
+          .sidebar-root {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            top: auto !important; /* This cancels the top: 64px from desktop */
+            width: 100% !important;
+            height: 65px !important;
+            flex-direction: row !important;
+            padding: 0 !important;
+            border-right: none !important;
+            border-top: 1px solid #eee !important;
+            background: white !important;
+            z-index: 10000 !important;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05) !important;
+          }
+          .sidebar-nav {
+            flex-direction: row !important;
+            width: 100% !important;
+            justify-content: space-around !important;
+            gap: 0 !important;
+          }
+          .nav-item {
+            flex-direction: column !important;
+            padding: 8px !important;
+            flex: 1 !important;
+            gap: 2px !important;
+            border-radius: 0 !important;
+          }
+          .nav-label {
+            font-size: 10px !important;
+            margin: 0 !important;
+          }
+          .sidebar-footer { display: none !important; }
+        }
+      `}</style>
+
+      <nav style={styles.nav} className="sidebar-nav">
+        {visibleItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             style={({ isActive }) => ({
               ...styles.navItem,
               ...(isActive ? styles.navItemActive : {}),
-              animationDelay: `${idx * 60}ms`,
             })}
+            className="nav-item"
           >
-            {({ isActive }) => (
-              <>
-                <span style={{
-                  ...styles.navIcon,
-                  color: isActive ? 'var(--primary)' : 'var(--text-muted)',
-                }}>
-                  {item.icon}
-                </span>
-                <span style={styles.navLabel}>{item.label}</span>
-                {isActive && <div style={styles.activeDot} />}
-              </>
-            )}
+            <span style={styles.navIcon}>{item.icon}</span>
+            <span style={styles.navLabel} className="nav-label">{item.label}</span>
           </NavLink>
         ))}
       </nav>
 
-      <div style={styles.sidebarFooter}>
-        <div style={styles.footerInfo}>
-          <div style={styles.footerDot} />
-          <span style={{ fontSize: 11, color: 'var(--text-light)' }}>System Online</span>
-        </div>
-        <p style={{ fontSize: 11, color: 'var(--text-light)', marginTop: 4 }}>
-          MedCare v1.0.0
-        </p>
+      <div style={styles.sidebarFooter} className="sidebar-footer">
+        <span style={{ fontSize: 11, color: '#94a3b8' }}>MedCare v1.0</span>
       </div>
     </aside>
   );
 }
 
 const styles = {
-  sidebar: {
-    width: 'var(--sidebar-w)',
-    background: 'white',
-    borderRight: '1px solid var(--border)',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: '20px 12px',
-    flexShrink: 0,
-    position: 'sticky',
-    top: 'var(--header-h)',
-    height: 'calc(100vh - var(--header-h))',
-    overflowY: 'auto',
-  },
-  nav:           { display: 'flex', flexDirection: 'column', gap: 4 },
-  navItem:       {
-    display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px',
-    borderRadius: 10, textDecoration: 'none', color: 'var(--text-muted)',
-    fontSize: 14, fontWeight: 500, transition: 'all 0.2s', position: 'relative',
-    animation: 'fadeUp 0.4s ease both',
-  },
-  navItemActive: { background: 'var(--primary-light)', color: 'var(--primary-dark)' },
-  navIcon:       { display: 'flex', alignItems: 'center', flexShrink: 0 },
-  navLabel:      { flex: 1 },
-  activeDot:     { width: 6, height: 6, borderRadius: '50%', background: 'var(--primary)' },
-  sidebarFooter: { padding: '12px 14px', borderTop: '1px solid var(--border)' },
-  footerInfo:    { display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 },
-  footerDot:     { width: 7, height: 7, borderRadius: '50%', background: '#10b981', animation: 'pulse-ring 2s ease infinite' },
+  sidebar: { width: '240px', background: 'white', borderRight: '1px solid #eee', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '20px 12px', position: 'sticky', top: '64px', height: 'calc(100vh - 64px)' },
+  nav: { display: 'flex', flexDirection: 'column', gap: 4 },
+  navItem: { display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderRadius: 10, textDecoration: 'none', color: '#64748b', fontSize: 14, fontWeight: 500, transition: '0.2s', textAlign: 'center' },
+  navItemActive: { background: '#f0f9ff', color: '#0ea5e9' },
+  navIcon: { fontSize: '20px' },
+  navLabel: { flex: 1 },
+  sidebarFooter: { padding: '16px', borderTop: '1px solid #eee', textAlign: 'center' }
 };
