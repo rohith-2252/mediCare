@@ -53,10 +53,12 @@ function setSessionCookie(res, medId, role) {
   const payload = JSON.stringify({ medId, role, exp });
   const token = Buffer.from(payload).toString('base64');
 
+  const isProduction = process.env.NODE_ENV === 'production';
+  
   res.cookie('session', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
     maxAge: 24 * 60 * 60 * 1000,
   });
 }
